@@ -1,0 +1,25 @@
+{
+  "name": "pro-mern-stack-2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.18.2",
+    "nodemon": "^1.19.4"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.20.7",
+    "@babel/core": "^7.20.12",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-react": "^7.18.6"
+  },
+  "scripts": {
+    "start": "nodemon -w server server/server.js",
+    "compile": "babel src --out-dir public",
+    "watch": "babel src --out-dir public --watch --verbose",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Yann Youbi <youbi.yann@gmail.com>",
+  "license": "ISC"
+}
