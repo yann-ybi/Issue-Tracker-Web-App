@@ -1,0 +1,24 @@
+{
+  "name": "ui",
+  "version": "1.0.0",
+  "description": "UI server issue tracker",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.18.2",
+    "nodemon": "^1.19.4"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.20.7",
+    "@babel/core": "^7.20.12",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-react": "^7.18.6"
+  },
+  "scripts": {
+    "start": "nodemon -w uiserver.js uiserver.js",
+    "compile": "babel src --out-dir public",
+    "watch": "babel src --out-dir public --watch --verbose"
+  },
+  "keywords": [],
+  "author": "Yann Youbi <youbi.yann@gmail.com>",
+  "license": "ISC"
+}
