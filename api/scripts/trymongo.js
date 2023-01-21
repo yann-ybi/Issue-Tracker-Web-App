@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { MongoClient } = require('mongodb');
 
 const url = "mongodb+srv://yann-ybi:mypassword@issuetracker.kewi82v.mongodb.net/?retryWrites=true&w=majority";

@@ -94,6 +94,9 @@ var IssueAdd = /*#__PURE__*/function (_React$Component2) {
   }]);
   return IssueAdd;
 }(React.Component);
+IssueAdd.propTypes = {
+  createIssue: PropTypes.func.isRequired
+};
 function graphQLFetch(_x) {
   return _graphQLFetch.apply(this, arguments);
 }
@@ -112,7 +115,7 @@ function _graphQLFetch() {
           variables = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : {};
           _context3.prev = 1;
           _context3.next = 4;
-          return fetch("http://127.0.0.1:3000/graphql", {
+          return fetch(window.ENV.UI_API_ENDPOINT, {
             method: "POST",
             headers: {
               "Content-Type": "application/json"

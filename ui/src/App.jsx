@@ -76,9 +76,13 @@ class IssueAdd extends React.Component {
   }
 }
 
+IssueAdd.propTypes = {
+  createIssue: PropTypes.func.isRequired,
+};
+
 async function graphQLFetch(query, variables = {}) {
   try {
-    const response = await fetch("http://127.0.0.1:3000/graphql", {
+    const response = await fetch(window.ENV.UI_API_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query, variables }),
