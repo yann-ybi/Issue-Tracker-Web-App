@@ -477,9 +477,13 @@ var IssueFilter = /*#__PURE__*/function (_React$Component) {
     var params = new url_search_params__WEBPACK_IMPORTED_MODULE_1___default.a(search);
     _this.state = {
       status: params.get("status") || "",
+      effortMin: params.get("effortMin") || "",
+      effortMax: params.get("effortMax") || "",
       changed: false
     };
     _this.onChangeStatus = _this.onChangeStatus.bind(_assertThisInitialized(_this));
+    _this.onChangeEffortMin = _this.onChangeEffortMin.bind(_assertThisInitialized(_this));
+    _this.onChangeEffortMax = _this.onChangeEffortMax.bind(_assertThisInitialized(_this));
     _this.applyFilter = _this.applyFilter.bind(_assertThisInitialized(_this));
     _this.showOriginalFilter = _this.showOriginalFilter.bind(_assertThisInitialized(_this));
     return _this;
@@ -502,31 +506,66 @@ var IssueFilter = /*#__PURE__*/function (_React$Component) {
       });
     }
   }, {
+    key: "onChangeEffortMin",
+    value: function onChangeEffortMin(e) {
+      var effortString = e.target.value;
+      if (effortString.match(/^\d*$/)) {
+        this.setState({
+          effortMin: e.target.value,
+          changed: true
+        });
+      }
+    }
+  }, {
+    key: "onChangeEffortMax",
+    value: function onChangeEffortMax(e) {
+      var effortString = e.target.value;
+      if (effortString.match(/^\d*$/)) {
+        this.setState({
+          effortMax: e.target.value,
+          changed: true
+        });
+      }
+    }
+  }, {
     key: "showOriginalFilter",
     value: function showOriginalFilter() {
       var search = this.props.location.search;
       var params = new url_search_params__WEBPACK_IMPORTED_MODULE_1___default.a(search);
       this.setState({
         status: params.get("status") || "",
+        effortMin: params.get("effortMin") || "",
+        effortMax: params.get("effortMax") || "",
         changed: false
       });
     }
   }, {
     key: "applyFilter",
     value: function applyFilter() {
-      var status = this.state.status;
+      var _this$state = this.state,
+        status = _this$state.status,
+        effortMin = _this$state.effortMin,
+        effortMax = _this$state.effortMax;
       var history = this.props.history;
+      var params = new url_search_params__WEBPACK_IMPORTED_MODULE_1___default.a();
+      if (status) params.set("status", status);
+      if (effortMin) params.set("effortMin", effortMin);
+      if (effortMax) params.set("effortMax", effortMax);
+      var search = params.toString() ? "?".concat(params.toString()) : "";
       history.push({
         pathname: "/issues",
-        search: status ? "?status=".concat(status) : ""
+        search: search
       });
     }
   }, {
     key: "render",
     value: function render() {
-      var _this$state = this.state,
-        status = _this$state.status,
-        changed = _this$state.changed;
+      var _this$state2 = this.state,
+        status = _this$state2.status,
+        changed = _this$state2.changed;
+      var _this$state3 = this.state,
+        effortMin = _this$state3.effortMin,
+        effortMax = _this$state3.effortMax;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Status:", " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
         value: status,
         onChange: this.onChangeStatus
@@ -540,7 +579,15 @@ var IssueFilter = /*#__PURE__*/function (_React$Component) {
         value: "Fixed"
       }, "Fixed"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
         value: "Closed"
-      }, "Closed")), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      }, "Closed")), " ", "Effort between:", " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        size: 5,
+        value: effortMin,
+        onChange: this.onChangeEffortMin
+      }), " - ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        size: 5,
+        value: effortMax,
+        onChange: this.onChangeEffortMax
+      }), " - ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         type: "button",
         onClick: this.applyFilter
       }, "Apply"), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
@@ -631,7 +678,7 @@ var IssueList = /*#__PURE__*/function (_React$Component) {
     key: "loadData",
     value: function () {
       var _loadData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var search, params, vars, query, data;
+        var search, params, vars, effortMin, effortMax, query, data;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
@@ -639,17 +686,21 @@ var IssueList = /*#__PURE__*/function (_React$Component) {
               params = new url_search_params__WEBPACK_IMPORTED_MODULE_1___default.a(search);
               vars = {};
               if (params.get("status")) vars.status = params.get("status");
-              query = "query issueList($status: StatusType) {\n        issueList (status: $status) {\n            id title status owner created effort due\n        }\n    }";
-              _context.next = 7;
+              effortMin = parseInt(params.get("effortMin"), 10);
+              if (!Number.isNaN(effortMin)) vars.effortMin = effortMin;
+              effortMax = parseInt(params.get("effortMax"), 10);
+              if (!Number.isNaN(effortMax)) vars.effortMax = effortMax;
+              query = "query issueList(\n      $status: StatusType\n      $effortMin: Int\n      $effortMax: Int\n      ) {\n        issueList (\n          status: $status\n          effortMin: $effortMin\n          effortMax: $effortMax\n          ) {\n            id title status owner created effort due\n        }\n    }";
+              _context.next = 11;
               return Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_7__["default"])(query, vars);
-            case 7:
+            case 11:
               data = _context.sent;
               if (data) {
                 this.setState({
                   issues: data.issueList
                 });
               }
-            case 9:
+            case 13:
             case "end":
               return _context.stop();
           }
