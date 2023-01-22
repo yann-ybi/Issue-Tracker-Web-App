@@ -7,4 +7,4 @@
         "import/extensions": [ "error", "always", { "ignorePackages": true }],
       "react/prop-types": "off"
     }
-  }
+}
