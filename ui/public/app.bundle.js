@@ -469,17 +469,52 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 var IssueFilter = /*#__PURE__*/function (_React$Component) {
   _inherits(IssueFilter, _React$Component);
   var _super = _createSuper(IssueFilter);
-  function IssueFilter() {
+  function IssueFilter(_ref) {
     var _this;
+    var search = _ref.location.search;
     _classCallCheck(this, IssueFilter);
     _this = _super.call(this);
+    var params = new url_search_params__WEBPACK_IMPORTED_MODULE_1___default.a(search);
+    _this.state = {
+      status: params.get("status") || "",
+      changed: false
+    };
     _this.onChangeStatus = _this.onChangeStatus.bind(_assertThisInitialized(_this));
+    _this.applyFilter = _this.applyFilter.bind(_assertThisInitialized(_this));
+    _this.showOriginalFilter = _this.showOriginalFilter.bind(_assertThisInitialized(_this));
     return _this;
   }
   _createClass(IssueFilter, [{
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps) {
+      var prevSearch = prevProps.location.search;
+      var search = this.props.location.search;
+      if (prevSearch !== search) {
+        this.showOriginalFilter();
+      }
+    }
+  }, {
     key: "onChangeStatus",
     value: function onChangeStatus(e) {
-      var status = e.target.value;
+      this.setState({
+        status: e.target.value,
+        changed: true
+      });
+    }
+  }, {
+    key: "showOriginalFilter",
+    value: function showOriginalFilter() {
+      var search = this.props.location.search;
+      var params = new url_search_params__WEBPACK_IMPORTED_MODULE_1___default.a(search);
+      this.setState({
+        status: params.get("status") || "",
+        changed: false
+      });
+    }
+  }, {
+    key: "applyFilter",
+    value: function applyFilter() {
+      var status = this.state.status;
       var history = this.props.history;
       history.push({
         pathname: "/issues",
@@ -489,10 +524,11 @@ var IssueFilter = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var search = this.props.location.search;
-      var params = new url_search_params__WEBPACK_IMPORTED_MODULE_1___default.a(search);
+      var _this$state = this.state,
+        status = _this$state.status,
+        changed = _this$state.changed;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Status:", " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-        value: params.get("status") || "",
+        value: status,
         onChange: this.onChangeStatus
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
         value: ""
@@ -504,7 +540,14 @@ var IssueFilter = /*#__PURE__*/function (_React$Component) {
         value: "Fixed"
       }, "Fixed"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
         value: "Closed"
-      }, "Closed")));
+      }, "Closed")), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        type: "button",
+        onClick: this.applyFilter
+      }, "Apply"), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        type: "button",
+        onClick: this.showOriginalFilter,
+        disabled: !changed
+      }, "Reset"));
     }
   }]);
   return IssueFilter;
