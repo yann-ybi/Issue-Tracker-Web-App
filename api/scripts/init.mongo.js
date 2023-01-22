@@ -4,7 +4,7 @@ const issuesDB = [
   {
     id: 1,
     status: "New",
-    owner: "Ravan",
+    owner: "Revan",
     effort: 5,
     created: new Date("2019-01-15"),
     due: undefined,
