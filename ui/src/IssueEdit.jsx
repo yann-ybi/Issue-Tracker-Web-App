@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import graphQLFetch from "./graphQLFetch";
+import graphQLFetch from "./graphQLFetch.js";
 import NumInput from "./NumInput.jsx";
 import DateInput from "./DateInput.jsx";
 import TextInput from "./TextInput.jsx";
@@ -55,16 +55,37 @@ export default class IssueEdit extends React.Component {
     });
   }
 
-  handleSubmit(e) {
+  async handleSubmit(e) {
     e.preventDefault();
-    const { issue } = this.state;
-    console.log(issue);
+    const { issue, invalidFields } = this.state;
+    if (Object.keys(invalidFields).length !== 0) return;
+
+    const query = `mutation issueUpdate(
+      $id: Int!
+      $changes: IssueUpdateInputs!
+    ) {
+      issueUpdate(
+        id: $id
+        changes: $changes
+      ) {
+        id title status owner
+        effort created due description
+      }
+    }`;
+
+    const { id, created, ...changes } = issue;
+    const data = await graphQLFetch(query, { changes, id });
+    if (data) {
+      this.setState({ issue: data.issueUpdate });
+      alert("Updated issue successfully"); // eslint-disable-line no-alert
+    }
   }
 
   async loadData() {
     const query = `query issue($id: Int!) {
       issue(id: $id) {
-        id title status owner effort created due description
+        id title status owner
+        effort created due description
       }
     }`;
 
@@ -74,7 +95,6 @@ export default class IssueEdit extends React.Component {
       },
     } = this.props;
     const data = await graphQLFetch(query, { id });
-
     this.setState({ issue: data ? data.issue : {}, invalidFields: {} });
   }
 
@@ -141,6 +161,7 @@ export default class IssueEdit extends React.Component {
                   name="owner"
                   value={owner}
                   onChange={this.onChange}
+                  key={id}
                 />
               </td>
             </tr>
@@ -180,7 +201,7 @@ export default class IssueEdit extends React.Component {
               </td>
             </tr>
             <tr>
-              <td>Description</td>
+              <td>Description:</td>
               <td>
                 <TextInput
                   tag="textarea"

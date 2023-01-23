@@ -28,6 +28,15 @@ type Issue {
   description: String
 }
 
+input IssueUpdateInputs {
+  title: String
+  status: StatusType
+  owner: String
+  effort: Int
+  due: GraphQLDate
+  description: String
+}
+
 type Query {
   about: String!
   issueList(status: StatusType, effortMin: Int, effortMax: Int): [Issue!]!
@@ -37,4 +46,5 @@ type Query {
 type Mutation {
   setAboutMessage(message: String!): String
   issueAdd(issue: IssueInputs!): Issue!
+  issueUpdate(id: Int!, changes: IssueUpdateInputs!): Issue!
 }
