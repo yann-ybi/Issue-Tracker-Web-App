@@ -1,27 +1,31 @@
-require('dotenv').config();
-const  { MongoClient } = require('mongodb');
+require("dotenv").config();
+const { MongoClient } = require("mongodb");
 
 let db;
 
 async function connectToDb() {
-    const url = process.env.DB_URL || 'mongodb+srv://yann-ybi:mypassword@IssueTracker-issuetracker.kewi82v.mongodb.net/issuetracker?retryWrites=true';
-    const client = new MongoClient(url, { useNewUrlParser: true });
-    await client.connect();
-    console.log('Connected to MongoDB at', url);
-    db = client.db()
+  const url =
+    process.env.DB_URL ||
+    "mongodb+srv://<username>:<password>@IssueTracker-issuetracker.kewi82v.mongodb.net/issuetracker?retryWrites=true";
+  const client = new MongoClient(url, { useNewUrlParser: true });
+  await client.connect();
+  console.log("Connected to MongoDB at", url);
+  db = client.db();
 }
 
 async function getNextSequence(name) {
-    const result = await db.collection('counters').findOneAndUpdate(
-        { _id: name },
-        { $inc: { current: 1 } },
-        { returnOriginal: false },
+  const result = await db
+    .collection("counters")
+    .findOneAndUpdate(
+      { _id: name },
+      { $inc: { current: 1 } },
+      { returnOriginal: false }
     );
-    return result.value.current
+  return result.value.current;
 }
 
 function getDb() {
-    return db
+  return db;
 }
 
 module.exports = { connectToDb, getNextSequence, getDb };

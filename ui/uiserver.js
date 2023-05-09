@@ -47,3 +47,5 @@ const port = process.env.UI_SERVER_PORT || 8000;
 app.listen(port, function () {
   console.log(`UI started on port ${port}`);
 });
+
+// npm run watch + npm run start
